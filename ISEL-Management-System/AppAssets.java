@@ -1,0 +1,63 @@
+package tps.tp4;
+
+import javax.swing.*; // Importar a biblioteca Swing, * = importar todas as classes da biblioteca para usar
+import java.awt.*; // Importa a infraestrutura básica, como gestores de posicionamento (Layouts), deteção de cliques, cores...
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+// Classe utilitaria para localizar e carregar imagens da aplicacao.
+// Assim nao temos de repetir caminhos de ficheiros em varias classes.
+public final class AppAssets {
+
+    // Icone pequeno da aplicacao, usado na barra de tarefas e na barra da janela.
+    private static final String APP_ICON_FILE = "ISEL_logo_icon.png";
+    // Logo maior, usado na zona visual do login.
+    private static final String DISPLAY_LOGO_FILE = "ISEL_logo_quadrado.png";
+
+    private AppAssets() {
+    }
+
+    public static Path resolveLogoPath() {
+        return ProjectPaths.resolveProjectBase().resolve(Path.of("src", "tps", "tp4", "assets", DISPLAY_LOGO_FILE));
+    }
+
+    public static Path resolveAppIconPath() {
+        return ProjectPaths.resolveProjectBase().resolve(Path.of("src", "tps", "tp4", "assets", APP_ICON_FILE));
+    }
+
+    // Devolve o caminho de qualquer ficheiro dentro da pasta assets.
+    public static Path resolveAssetPath(String fileName) {
+        return ProjectPaths.resolveProjectBase().resolve(Path.of("src", "tps", "tp4", "assets", fileName));
+    }
+
+    public static ImageIcon loadLogoIcon() {
+        return new ImageIcon(resolveLogoPath().toString());
+    }
+
+    // Tenta carregar um icon opcional; se o ficheiro nao existir devolve null.
+    public static ImageIcon loadOptionalIcon(String fileName) {
+        Path path = resolveAssetPath(fileName);
+        if (!Files.exists(path)) {
+            return null;
+        }
+        return new ImageIcon(path.toString());
+    }
+
+    // Tenta carregar uma imagem opcional; se o ficheiro nao existir devolve null.
+    public static Image loadOptionalImage(String fileName) {
+        ImageIcon icon = loadOptionalIcon(fileName);
+        return icon == null ? null : icon.getImage();
+    }
+
+    public static Image loadAppIconImage() {
+        return new ImageIcon(resolveAppIconPath().toString()).getImage();
+    }
+
+    public static Image loadLogoImage() {
+        return loadLogoIcon().getImage();
+    }
+
+    public static void applyAppIcon(Window window) {
+        window.setIconImage(loadAppIconImage());
+    }
+}
